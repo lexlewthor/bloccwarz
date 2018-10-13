@@ -1,0 +1,24 @@
+{
+  "name": "bloccwarz",
+  "description": "Turn-based strategy game built on Ethereum blockchain",
+  "version": "0.0.1",
+  "main": "build",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "ethjs-provider-http": "^0.1.6",
+    "ethjs-rpc": "^0.2.0",
+    "solc": "0.4.25",
+    "truffle": "5.0.0-beta.1",
+    "truffle-hdwallet-provider": "0.0.5",
+    "typechain": "^0.3.6",
+    "web3-eth-abi": "1.0.0-beta.36"
+  },
+  "scripts": {
+    "compile": "node_modules/.bin/truffle compile",
+    "build": "npm run compile && npm run generate",
+    "generate": "node_modules/.bin/typechain --target=web3-1.0.0 --outDir ./build/ts/ './build/contracts/*.json'",
+    "prepare": "npm run build"
+  }
+}
