@@ -9,7 +9,9 @@ $ npm test
 ## Deploy
 1. Modify params in `migrations/2_deploy_contract.js`
 2. Run truffle migrate using npm script
-        $ npm run migrate 
+
+       $ npm run migrate 
+        
 ## Notes
 - I've had this idea since ETHBuenosAires to build this game in a smart contract http://teq3.playteq.com/
 - I'm thinking maybe it could be done using MintAndBurnTokens for the resources and a weighted lottery system for battles
