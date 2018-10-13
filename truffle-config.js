@@ -1,103 +1,59 @@
-/**
- * Use this file to configure your truffle project. It's seeded with some
- * common settings for different networks and features like migrations,
- * compilation and testing. Uncomment the ones you need or modify
- * them to suit your project as necessary.
- *
- * More information about configuration can be found at:
- *
- * truffleframework.com/docs/advanced/configuration
- *
- * To deploy via Infura you'll need a wallet provider (like truffle-hdwallet-provider)
- * to sign your transactions before they're sent to a remote public node. Infura API
- * keys are available for free at: infura.io/register
- *
- *   > > Using Truffle V5 or later? Make sure you install the `web3-one` version.
- *
- *   > > $ npm install truffle-hdwallet-provider@web3-one
- *
- * You'll also need a mnemonic - the twelve word phrase the wallet uses to generate
- * public/private key pairs. If you're publishing your code to GitHub make sure you load this
- * phrase from a file you've .gitignored so it doesn't accidentally become public.
- *
- */
-
-// const HDWallet = require('truffle-hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('truffle-hdwallet-provider');
+const mnemonic = 'refuse result toy bunker royal small story exhaust know piano base stand'
 
 module.exports = {
-  /**
-   * Networks define how you connect to your ethereum client and let you set the
-   * defaults web3 uses to send transactions. If you don't specify one truffle
-   * will spin up a development blockchain for you on port 9545 when you
-   * run `develop` or `test`. You can ask a truffle command to use a specific
-   * network from the command line, e.g
-   *
-   * $ truffle test --network <network-name>
-   */
-
   networks: {
-    // Useful for testing. The `development` name is special - truffle uses it by default
-    // if it's defined here and no other network is specified at the command line.
-    // You should run a client (like ganache-cli, geth or parity) in a separate terminal
-    // tab if you use this network and you must also set the `host`, `port` and `network_id`
-    // options below to some value.
-    //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
-
-    // Another network with more advanced options...
-    advanced: {
-      // port: 8777,             // Custom port
-      // network_id: 1342,       // Custom network
-      // gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
-      // gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
-      // from: <address>,        // Account to send txs from (default: accounts[0])
-      // websockets: true        // Enable EventEmitter interface for web3 (default: false)
+    development: {
+      host: 'localhost',
+      port: 8545,
+      network_id: '*' // match any network
     },
-
-    // Useful for deploying to a public network.
-    // NB: It's important to wrap the provider as a function.
-    ropsten: {
-      // provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/${infuraKey}`),
-      // network_id: 3,       // Ropsten's id
-      // gas: 5500000,        // Ropsten has a lower block limit than mainnet
-      // confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-      // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      // skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    mainnet: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/M2xeaVefzxkLhvrTLq43')
+      },
+      network_id: '1', // match any network
+      gas: 7900000
     },
-
-    // Useful for private networks
-    private: {
-      // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
-      // network_id: 2111,   // This network is yours, in the cloud.
-      // production: true    // Treats this network as if it was a public net. (default: false)
-    }
-  },
-
-  // Set default mocha options here, use special reporters etc.
-  mocha: {
-    // timeout: 100000
-  },
-
-  // Configure your compilers
-  compilers: {
-    solc: {
-      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
-      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
-      //  evmVersion: "byzantium"
-      // }
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/M2xeaVefzxkLhvrTLq43')
+      },
+      network_id: 4
     }
   }
-}
+};
+
+/*
+Available Accounts
+==================
+(0) 0x8ec75ef3adf6c953775d0738e0e7bd60e647e5ef
+(1) 0x9a8d670c323e894dda9a045372a75d607a47cb9e
+(2) 0xa76f1305f64daf03983781f248f09c719cda30bf
+(3) 0xe4cbacbf76d1120dfe78b926fbcfa6e5bc9917a1
+(4) 0x6fab42068c1eedbcbd3948b1cddef1eef1249825
+(5) 0xacc361b5b7f3bbda23ea044b3142dcc6b76ec708
+(6) 0xecd03eb3951705da1b434fcf0da914268b687e3d
+(7) 0x1754e4007922865fb09349897524ee2dd63ac184
+(8) 0x6fec9dda7a05f9e45601d77a0f1e733c821a02d8
+(9) 0x778e55d7517b5278399d41f4a89f78418154297b
+
+Private Keys
+==================
+(0) f0f18fd1df636821d2d6a04b4d4f4c76fc33eb66c253ae1e4028bf33c48622bc
+(1) 1ee927be212d11c388af6f0a11e66ab2fb054193ed50b6c1b457e2b80ab45b67
+(2) cf218d8691b038086126d98f91297e608f9e2aa1fdd5ba2cfce41eab2887ed76
+(3) 33e495d9693e612f87b80e2d202e910e36a5e416a0368d93b9e756a2b5668836
+(4) 53efc621d7b1b9386b7ca95067f3082de9d0e1024600363ae38465a2ce6af4e3
+(5) 2b1f640a724e13ee80041636ff6acf4f980b63cc609bc5d9d94c80f1d45bab5c
+(6) dbd5dd1198c75025a66982abcc8892f3abfb31db35e677005e93d383e615c2cf
+(7) 874bc239731735873dd55edebc6e14764ce1e08ed45e1f52c80d53721c961152
+(8) 48ab1dc0428e4cd7ad5a63987d3da4561d7f0599462ecddba82e382a60b249aa
+(9) eef8d4482cf4bb3b6f70f7b91f19545a73f6e3bb27d54f6a78ad49a57ed70483
+
+HD Wallet
+==================
+Mnemonic:      `fetch local valve black attend double eye excite planet primary install allow`
+Base HD Path:  m/44'/60'/0'/0/{account_index}
+
+*/
