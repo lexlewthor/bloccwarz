@@ -55,7 +55,7 @@ contract BloccWarz is Ownable {
     address winner
   );
 
-  constructor (uint24 _periodLength, uint256 _bwCashSupply) public {
+  constructor (uint32 _periodLength, uint256 _bwCashSupply) public {
     periodLength = _periodLength;
     bwCash = new MintAndBurnToken('BloccWarzCash', 18, 'BWC');
     bwCash.mint(this, _bwCashSupply);
