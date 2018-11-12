@@ -5,32 +5,40 @@ import "./Ownable.sol";
 import "./SafeMath.sol";
 
 contract BloccWarz is Ownable {
-  using SafeMath for uint32;
-  using SafeMath for uint64;
   using SafeMath for uint256;
 
   // Contract variables
   MintAndBurnToken public bwCash;
-  uint32 public periodLength; // time length of each period in seconds
-  uint64 public currentPeriod = 0;
+  uint256 public periodLength; // time length of each period in seconds
+  uint256 public currentPeriod = 0;
+  uint256 public feeToJoinWei = 5000000000000000; // one time fee to join game
   mapping(address => Player) public players;
   mapping(address => mapping(address => Battle)) public battles; // attacker -> defender -> battle
+  mapping(uint256 => Period) public periods;
 
   // Data structures
+  struct Period {
+    // uint256 playersSpawned;
+    // uint256 playersInteracted;
+    // uint256 battlesStarted;
+    uint256 startTime; // the starting unix timestamp in seconds
+    uint256 endTime; // the ending unix timestamp in seconds
+  }
+
   struct Player {
     address account; // used for id, eth and bwc balances
-    uint64 periodSpawned; // the period in which the player joined the game
-    uint64 periodLastPlayedd; // the last period in which the player has interacted
-    uint32 periodsPlayed; // the total count of periods a player has interacted
-    mapping(uint64 => bool) periodHasPlayed; // track if the user has played in a given period
+    uint256 periodSpawned; // the period in which the player joined the game
+    uint256 periodLastPlayedd; // the last period in which the player has interacted
+    uint256 periodsPlayed; // the total count of periods a player has interacted
+    mapping(uint256 => bool) periodHasPlayed; // track if the user has played in a given period
     // Resources
-    uint64 food;
-    uint64 medicine;
-    uint64 ore;
-    uint64 population;
+    uint256 food;
+    uint256 medicine;
+    uint256 ore;
+    uint256 population;
     // Battles
-    uint32 battlesTotal;
-    uint32 battlesWon;
+    uint256 battlesTotal;
+    uint256 battlesWon;
   }
 
   struct Battle {
@@ -47,32 +55,44 @@ contract BloccWarz is Ownable {
 
   event PlayerHarvest(
     address account,
-    uint64 food,
-    uint64 medicine,
-    uint64 ore,
-    uint64 population
+    uint256 food,
+    uint256 medicine,
+    uint256 ore,
+    uint256 population
   );
 
   event BattleStart(
-    uint64 period,
+    uint256 period,
     address attacker,
     address defender
   );
 
   event BattleEnd(
-    uint64 period,
+    uint256 period,
     address attacker,
     address defender,
     address winner
+    // TODO results
   );
 
-  constructor (uint32 _periodLength, uint256 _bwCashSupply) public {
+  constructor (uint256 _periodLength, uint256 _bwCashSupply) public {
     periodLength = _periodLength;
     bwCash = new MintAndBurnToken('BloccWarzCash', 18, 'BLCCWZC');
     bwCash.mint(this, _bwCashSupply);
   }
 
+  function updatePeriod() public {
+    while (now >= periods[currentPeriod].endTime) {
+      Period memory prevPeriod = periods[currentPeriod];
+      currentPeriod += 1;
+      periods[currentPeriod].startTime = prevPeriod.endTime;
+      periods[currentPeriod].endTime = SafeMath.add(prevPeriod.endTime, periodLength);
+    }
+  }
+
   function joinGame() public payable {
+    updatePeriod();
+    require(msg.value >= feeToJoinWei);
 
   }
 }
