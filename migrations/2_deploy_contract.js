@@ -1,8 +1,7 @@
-var BloccWarz = artifacts.require('./BloccWarz.sol');
+var BloccWarz = artifacts.require('./BloccWarz.sol')
 
-module.exports = function(deployer) {
-  const periodLength = 60 * 5;
-  const bwCashSupply = "100000000000000000000";
+module.exports = function(deployer, network) {
+  const periodLength = 60 * 5
 
-  deployer.deploy(BloccWarz, periodLength, bwCashSupply);
-};
+  deployer.deploy(BloccWarz, periodLength)
+}

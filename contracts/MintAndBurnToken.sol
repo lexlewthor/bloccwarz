@@ -1,7 +1,7 @@
 pragma solidity 0.4.25;
 
 import "./StandardToken.sol";
-import "./OZ_Ownable.sol";
+import "./Ownable.sol";
 import "./SafeMath.sol";
 
 
