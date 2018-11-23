@@ -109,7 +109,10 @@ contract BloccWarz is Ownable {
     // F(x) = (x^2)/2000 + C
     // purchaseWei = ((bwToken.totalSupply() + tokensMinted)^2)/2000 - address(this).balance
     // tokensMinted = sqrt(2000 * (purchaseWei - address(this).balance)) - bwToken.totalSupply()
-    uint256 tokensMinted = sqrt(2000 * (purchaseWei - address(this).balance)) - bwToken.totalSupply();
+    uint256 tokensMinted = SafeMath.sub(
+      sqrt(SafeMath.mul(2000, SafeMath.sub(purchaseWei, address(this).balance))),
+      bwToken.totalSupply()
+    );
     // mint tokens for sender
     bwToken.mint(msg.sender, tokensMinted);
   }
