@@ -18,15 +18,15 @@ $ npm test
   - Used https://www.integral-calculator.com/ to play with some different curves
   - Using google to search for different implementations in Solidity, probably Bancor best example
 - Owner of contract charges fixed % of wei value on mint/burn transactions
-- Players will be created and allocated initial game resources on first token purchase (full list of resources and balancing functions TBD)
+- Players will be created and allocated initial game resources on token deposit (full list of resources and balancing functions TBD)
   - food
   - medicine
   - ore
   - population
   - army
-- Subsequent token purchases will not affect resources
+- Tokens will be spent on game actions
 - Tokens will be offered as a wager during battles
-- Players can call a fixed set of functions once each period, each with associated resource cost/reward (full list of actions and cost/rewardss TBD)
+- Players can call a fixed set of functions (game actions) once each period, each with associated resource cost/reward (full list of actions and cost/rewards TBD)
   - Harvest
     - collect more resources based on number of periods played and elapsed periods since last played
   - Repair
