@@ -23,6 +23,6 @@
     "generate": "node_modules/.bin/typechain --target=web3-1.0.0 --outDir ./build/ts/ './build/contracts/*.json'",
     "migrate": "node_modules/.bin/truffle migrate",
     "prepare": "npm run build",
-    "test": "node_modules/.bin/truffle test test"
+    "test": "node_modules/.bin/truffle test test/all.js"
   }
 }

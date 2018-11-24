@@ -70,3 +70,9 @@ $ npm test
 
 ### Marketplace
 - Players can build an in-contract marketplace for game resources
+
+
+## Sources
+
+https://github.com/SpankChain/spankbank
+https://github.com/ConnextProject/contracts
