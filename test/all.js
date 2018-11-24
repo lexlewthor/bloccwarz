@@ -100,11 +100,12 @@ contract('BloccWarz', accounts => {
       const userBWCWei = await bwcToken.balanceOf(user1.address)
       const netOwner = (new BN(ownerWeiAfter)).minus(new BN(ownerWeiBefore))
       const totalTokens = await bwcToken.totalSupply()
+      const userBalancBWCWei = userBWCWei.toString()
 
       assert.equal(netOwner.toString(), '10')
       assert.equal(contractWei.toString(), '3990')
-      assert.equal(userBWCWei.toString(), '2824')
-      assert.equal(userBWCWei.toString(), totalTokens.toString())
+      assert.equal(userBalancBWCWei, '2824')
+      assert.equal(userBalancBWCWei, totalTokens.toString())
     })
 
     it('fails with insufficient wei', async () => {
