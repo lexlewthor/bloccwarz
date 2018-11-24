@@ -120,12 +120,20 @@ contract('BloccWarz', accounts => {
 
   describe('sellTokens', () => {
     it('has correct values', async () => {
-      // const value = await bloccWarz.minimumTokenPurchaseWei()
-      // await bloccWarz.buyTokens({ from: user1.address, value })
-      // const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
-      // const contractWieBefore = await web3.eth.getBalance(bloccWarz.address)
-      // const ownerWeiBefore = await web3.eth.getBalance(owner.address)
-      // await bloccWarz.sellTokens(new BN(userBWCWei))
+      // buy
+      const value = await bloccWarz.minimumTokenPurchaseWei()
+      await bloccWarz.buyTokens({ from: user1.address, value })
+
+      // collect values before sell
+      const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
+      const contractWieBefore = await web3.eth.getBalance(bloccWarz.address)
+      const ownerWeiBefore = await web3.eth.getBalance(owner.address)
+      console.log('userBWCWeiBefore', userBWCWeiBefore.toString())
+      console.log('contractWieBefore', contractWieBefore.toString())
+      console.log('ownerWeiBefore', ownerWeiBefore.toString())
+
+      // sell
+      // await bloccWarz.sellTokens(new BN(userBWCWeiBefore))
       // const userBWCWeiAfter = await bwcToken.balanceOf(user1.address)
       // const contractWeiAfter = await web3.eth.getBalance(bloccWarz.address)
       // const ownerWeiAfter = await web3.eth.getBalance(owner.address)
