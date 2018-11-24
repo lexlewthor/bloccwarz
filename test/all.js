@@ -106,5 +106,14 @@ contract('BloccWarz', accounts => {
       assert.equal(userBWCWei.toString(), '2824')
       assert.equal(userBWCWei.toString(), totalTokens.toString())
     })
+
+    it('fails with insufficient wei', async () => {
+      const minWei = await bloccWarz.minimumTokenPurchaseWei()
+      const value = (new BN(minWei)).minus(1)
+      await bloccWarz.buyTokens({ from: user1.address, value })
+        .should
+        .be
+        .rejectedWith('Must send minimum purchase amount to buyTokens()')
+    })
   })
 })
