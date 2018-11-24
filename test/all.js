@@ -117,4 +117,43 @@ contract('BloccWarz', accounts => {
         .rejectedWith('Must send minimum purchase amount to buyTokens()')
     })
   })
+
+  describe('sellTokens', () => {
+    it('has correct values', async () => {
+      // const value = await bloccWarz.minimumTokenPurchaseWei()
+      // await bloccWarz.buyTokens({ from: user1.address, value })
+      // const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
+      // const contractWieBefore = await web3.eth.getBalance(bloccWarz.address)
+      // const ownerWeiBefore = await web3.eth.getBalance(owner.address)
+      // await bloccWarz.sellTokens(new BN(userBWCWei))
+      // const userBWCWeiAfter = await bwcToken.balanceOf(user1.address)
+      // const contractWeiAfter = await web3.eth.getBalance(bloccWarz.address)
+      // const ownerWeiAfter = await web3.eth.getBalance(owner.address)
+      // const netOwner = (new BN(ownerWeiAfter)).minus(new BN(ownerWeiBefore))
+      // const totalTokens = await bwcToken.totalSupply()
+
+      // console.log('userBWCWeiBefore', userBWCWeiBefore.toString())
+      // console.log('contractWieBefore', contractWieBefore.toString())
+      // console.log('ownerWeiBefore', ownerWeiBefore.toString())
+      // console.log('userBWCWeiAfter', userBWCWeiAfter.toString())
+      // console.log('contractWeiAfter', contractWeiAfter.toString())
+      // console.log('ownerWeiAfter', ownerWeiAfter.toString())
+      // console.log('netOwner', netOwner.toString())
+      // console.log('totalTokens', totalTokens.toString())
+
+      // assert.equal(netOwner.toString(), '10')
+      // assert.equal(contractWei.toString(), '3990')
+      // assert.equal(userBalancBWCWei, '2824')
+
+    })
+
+    // it('fails with insufficient tokens', async () => {
+    //   const minWei = await bloccWarz.minimumTokenPurchaseWei()
+    //   const value = (new BN(minWei)).minus(1)
+    //   await bloccWarz.buyTokens({ from: user1.address, value })
+    //     .should
+    //     .be
+    //     .rejectedWith('Must send minimum purchase amount to buyTokens()')
+    // })
+  })
 })
