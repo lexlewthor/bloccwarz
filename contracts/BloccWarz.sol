@@ -114,42 +114,36 @@ contract BloccWarz is Ownable {
     );
     // mint tokens for sender
     bwToken.mint(msg.sender, tokensMinted);
-    // Pay contract owner
-    owner().transfer(feeWei);
     // incerement balance
     poolBalance = SafeMath.add(poolBalance, purchaseWei);
   }
 
   function sellTokens(uint256 _tokensBWCWei) public {
     require(_tokensBWCWei > 0, "Sale amount must be greater than 0");
-    // Sender must have enough tokens
-    require(bwToken.balanceOf(msg.sender) >= _tokensBWCWei, "Sender has not enough tokens to sell");
     // Calculate wei value of tokens for sale
     // f(x) = 0.001x
     // F(x) = (x^2)/2000 + C
-    // salePriceWei = address(this).balance - ((bwToken.totalSupply() - _tokensBWCWei)^2)/2000
+    // salePriceWei = poolBalance - ((bwToken.totalSupply() - _tokensBWCWei)^2)/2000
     uint256 targetTokenSupply = SafeMath.sub(bwToken.totalSupply(), _tokensBWCWei);
     uint256 salePriceWei = SafeMath.sub(
-      address(this).balance,
+      poolBalance,
       SafeMath.div(
         SafeMath.mul(targetTokenSupply, targetTokenSupply),
         2000
       )
     );
-    require(address(this).balance >= salePriceWei, "Contract balance insufficient for sale");
+    require(poolBalance >= salePriceWei, "Contract balance insufficient for sale");
     // Calculate fee as a fraction of 1% of sale price
     uint256 feeWei = SafeMath.div(SafeMath.div(salePriceWei, 100), transactionFeeAs1PctDenom);
     uint256 sellerBalanceWei = SafeMath.sub(salePriceWei, feeWei);
-    // Pay contract owner
-    owner().transfer(feeWei);
+    // transfer the tokens
+    require(bwToken.transferFrom(msg.sender, this, _tokensBWCWei));
+    // Burn tokens
+    bwToken.burn(_tokensBWCWei);
     // Pay seller
     msg.sender.transfer(sellerBalanceWei);
-    // Transfer tokens to contract
-    // bwToken.transferFrom(msg.sender, this, _tokensBWCWei);
-    // // Burn tokens
-    // bwToken.burn(_tokensBWCWei);
-    // // update pool balance
-    // poolBalance = address(this).balance;
+    // update pool balance
+    poolBalance = SafeMath.sub(poolBalance, sellerBalanceWei);
   }
 
   // Math
