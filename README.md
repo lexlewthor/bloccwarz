@@ -18,8 +18,9 @@ $ npm test
 - Using linear bonding curve to mint/burn BW tokens `f(x) = 0.001x`
   - Some research https://blog.relevant.community/how-to-make-bonding-curves-for-continuous-token-models-3784653f8b17
   - Used https://www.integral-calculator.com/ to play with some different curves
-  - Using google to search for different implementations in Solidity, probably Bancor best example
+  - Using google to search for different implementations in Solidity, probably Bancor is best example
 - Owner of contract charges fixed % of wei value on mint/burn transactions
+- Minimum token transaction amount (lot) enforced in contract
 
 ### Game Resources
 - Players will be created and allocated initial game resources on token deposit (full list of resources and balancing functions TBD)
@@ -30,8 +31,8 @@ $ npm test
   - army
 
 ### Game Actions Using BloccWarzCash Tokens
-- Tokens will be spent on game actions
-- Tokens will be offered as a wager during battles
+- Tokens will be spent on certain game actions, not all
+- Tokens will be offered as a wager during battles, held in escrow and distributed at end of battle
 - Tokens spent will be stored in the contract, with an ownerOnly function to withdraw
   - TBD, could leave tokens frozen in contract, or only allow withdraw above a minimum amount frozen
 - Players can call a single game action once each period, each with associated resource cost/reward (full list of actions and cost/rewards TBD)
