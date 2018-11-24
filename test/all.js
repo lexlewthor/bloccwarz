@@ -133,7 +133,7 @@ contract('BloccWarz', accounts => {
       console.log('ownerWeiBefore', ownerWeiBefore.toString())
 
       // sell
-      // await bloccWarz.sellTokens(new BN(userBWCWeiBefore))
+      await bloccWarz.sellTokens(userBWCWeiBefore, { from: user1.address })
       // const userBWCWeiAfter = await bwcToken.balanceOf(user1.address)
       // const contractWeiAfter = await web3.eth.getBalance(bloccWarz.address)
       // const ownerWeiAfter = await web3.eth.getBalance(owner.address)

@@ -145,11 +145,11 @@ contract BloccWarz is Ownable {
     // Pay seller
     msg.sender.transfer(sellerBalanceWei);
     // Transfer tokens to contract
-    bwToken.transferFrom(msg.sender, this, _tokensBWCWei);
-    // Burn tokens
-    bwToken.burn(_tokensBWCWei);
-    // update pool balance
-    poolBalance = address(this).balance;
+    // bwToken.transferFrom(msg.sender, this, _tokensBWCWei);
+    // // Burn tokens
+    // bwToken.burn(_tokensBWCWei);
+    // // update pool balance
+    // poolBalance = address(this).balance;
   }
 
   // Math
