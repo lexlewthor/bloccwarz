@@ -9,6 +9,7 @@ contract BloccWarz is Ownable {
 
   // Contract variables
   MintAndBurnToken public bwToken;
+  uint256 public poolBalance = 0;
   uint256 public periodLength = 300; // time length of each period in seconds
   uint256 public currentPeriod = 0; // index of current period
   uint256 public minimumTokenPurchaseWei = 4000; // enforce a minimum purchase amount
@@ -102,19 +103,21 @@ contract BloccWarz is Ownable {
     // Calculate fee as a fraction of 1%
     uint256 feeWei = SafeMath.div(SafeMath.div(msg.value, 100), transactionFeeAs1PctDenom);
     uint256 purchaseWei = SafeMath.sub(msg.value, feeWei);
-    // Pay contract owner
-    owner().transfer(feeWei);
     // Determine how many tokens to be minted
     // f(x) = 0.001x
     // F(x) = (x^2)/2000 + C
-    // purchaseWei = ((bwToken.totalSupply() + tokensMinted)^2)/2000 - address(this).balance
-    // tokensMinted = sqrt(2000 * (purchaseWei - address(this).balance)) - bwToken.totalSupply()
+    // purchaseWei = ((bwToken.totalSupply() + tokensMinted)^2)/2000 - poolBalance
+    // tokensMinted = sqrt(2000 * (purchaseWei - poolBalance)) - bwToken.totalSupply()
     uint256 tokensMinted = SafeMath.sub(
-      sqrt(SafeMath.mul(2000, SafeMath.sub(purchaseWei, address(this).balance))),
+      sqrt(SafeMath.mul(2000, SafeMath.sub(purchaseWei, poolBalance))),
       bwToken.totalSupply()
     );
     // mint tokens for sender
     bwToken.mint(msg.sender, tokensMinted);
+    // Pay contract owner
+    owner().transfer(feeWei);
+    // incerement balance
+    poolBalance = SafeMath.add(poolBalance, purchaseWei);
   }
 
   function sellTokens(uint256 _tokensBWCWei) public {
@@ -145,6 +148,8 @@ contract BloccWarz is Ownable {
     bwToken.transferFrom(msg.sender, this, _tokensBWCWei);
     // Burn tokens
     bwToken.burn(_tokensBWCWei);
+    // update pool balance
+    poolBalance = address(this).balance;
   }
 
   // Math

@@ -1,9 +1,10 @@
+const BN = require('bignumber.js')
 const should = require('chai')
 const HttpProvider = require('ethjs-provider-http')
 const EthRPC = require('ethjs-rpc')
 const TestData = require('./data.json')
 const BloccWarz = artifacts.require('./BloccWarz.sol')
-const BWCTokens = artifacts.require('./MintAndBurnToken.sol')
+const BWCToken = artifacts.require('./MintAndBurnToken')
 
 should
   .use(require('chai-as-promised'))
@@ -64,17 +65,18 @@ contract('BloccWarz', accounts => {
 
   before('deploy contract', async () => {
     bloccWarz = await BloccWarz.deployed()
-    bwcToken = await bloccWarz.bwToken()
+    bwcTokenAddress = await bloccWarz.bwToken()
+    bwcToken = await BWCToken.at(bwcTokenAddress)
 
-    user1 = {
+    owner = {
       address: accounts[0],
       pk: TestData.privateKeys[0]
     }
-    user2 = {
+    user1 = {
       address: accounts[1],
       pk: TestData.privateKeys[1]
     }
-    user3 = {
+    user2 = {
       address: accounts[2],
       pk: TestData.privateKeys[2]
     }
@@ -89,9 +91,18 @@ contract('BloccWarz', accounts => {
   })
 
   describe('buyTokens', () => {
-    it('returns expected tokens for minimum purchase price', async () => {
+    it('has correct values for minimum purchase', async () => {
       const value = await bloccWarz.minimumTokenPurchaseWei()
+      const ownerWeiBefore = await web3.eth.getBalance(owner.address)
       await bloccWarz.buyTokens({ from: user1.address, value })
+      const contractWei = await web3.eth.getBalance(bloccWarz.address)
+      const ownerWeiAfter = await web3.eth.getBalance(owner.address)
+      const userBWCWei = await bwcToken.balanceOf(user1.address)
+      const netOwner = (new BN(ownerWeiAfter)).minus(new BN(ownerWeiBefore))
+
+      assert.equal(netOwner.toString(), '10')
+      assert.equal(contractWei.toString(), '3990')
+      assert.equal(userBWCWei.toString(), '2824')
     })
   })
 })
