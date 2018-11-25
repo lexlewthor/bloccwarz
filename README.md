@@ -1,6 +1,6 @@
 # BloccWarz
 Turn-based strategy game on the Ethereum blockchain
-## Setup and run test
+## Setup and Run Tests
 ```
 $ npm i
 $ npm run ganache &
