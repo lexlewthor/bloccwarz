@@ -101,7 +101,7 @@ contract BloccWarz is Ownable {
 
   function buyTokens() public payable {
     // Purchase must be enough wei for contract to collect fee
-    require(msg.value >= minTokenTransactionWei, "Must send minimum purchase amount to buyTokens()");
+    require(msg.value >= minTokenTransactionWei, "Must send minimum transaction amount to buy tokens");
     // Calculate fee as a fraction of 1%
     uint256 feeWei = SafeMath.div(SafeMath.div(msg.value, 100), transactionFeeAs1PctDenom);
     uint256 purchaseWei = SafeMath.sub(msg.value, feeWei);

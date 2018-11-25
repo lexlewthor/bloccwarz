@@ -108,7 +108,7 @@ contract('BloccWarz', accounts => {
       await bloccWarz.buyTokens({ from: user1.address, value })
         .should
         .be
-        .rejectedWith('Must send minimum purchase amount to buyTokens()')
+        .rejectedWith('Must send minimum transaction amount to buy tokens')
     })
   })
 
