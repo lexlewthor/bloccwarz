@@ -1,4 +1,4 @@
-const BN = require('bignumber.js')
+const BN = require('bn.js')
 const should = require('chai')
 const HttpProvider = require('ethjs-provider-http')
 const EthRPC = require('ethjs-rpc')
@@ -104,7 +104,7 @@ contract('BloccWarz', accounts => {
 
     it('fails with insufficient purchase amount wei', async () => {
       const minWei = await bloccWarz.minTokenTransactionWei()
-      const value = (new BN(minWei)).minus(1)
+      const value = minWei.sub(new BN(1))
       await bloccWarz.buyTokens({ from: user1.address, value })
         .should
         .be
@@ -130,10 +130,10 @@ contract('BloccWarz', accounts => {
       const userBWCWeiAfter = await bwcToken.balanceOf(user1.address)
       const contractWeiAfter = await web3.eth.getBalance(bloccWarz.address)
       const userWeiAfter = await web3.eth.getBalance(user1.address)
-      const netUser = (new BN(userWeiAfter)).minus(new BN(userWeiBefore))
+      const netUser = (new BN(userWeiAfter)).sub(new BN(userWeiBefore))
       const totalTokens = await bwcToken.totalSupply()
 
-      assert.isTrue(netUser < 0)
+      assert.isTrue((new BN(netUser)).isNeg())
       assert.equal(userBWCWeiAfter.toString(), '0')
       assert.equal(contractWeiAfter.toString(), '19')
       assert.equal(totalTokens.toString(), '0')
@@ -184,6 +184,32 @@ contract('BloccWarz', accounts => {
         .should
         .be
         .rejectedWith('Returned error: VM Exception while processing transaction: revert')
+    })
+  })
+
+  describe('joinGame', () => {
+    it('expects player to spawn correctly', async () => {
+      // Move to period 1
+      const periodLength = await bloccWarz.periodLength()
+      await moveForwardSecs(periodLength.toNumber())
+      // join game
+      const tx = await bloccWarz.joinGame({ from: user1.address })
+      // check initial player data
+      const player = await bloccWarz.players(user1.address)
+
+      assert.equal(player.periodSpawned.toNumber(), 1)
+      assert.equal(player.periodLastPlayed.toNumber(), 1)
+      assert.equal(player.periodsPlayedTotal.toNumber(), 1)
+      assert.isTrue(player.food.eq(await bloccWarz.initFood()))
+      assert.isTrue(player.medicine.eq(await bloccWarz.initMedicine()))
+      assert.isTrue(player.ore.eq(await bloccWarz.initOre()))
+      assert.isTrue(player.population.eq(await bloccWarz.initPopulation()))
+      assert.isTrue(player.army.eq(await bloccWarz.initArmy()))
+
+      // check logs
+      const playerSpawnedPayload = getEventParams(tx, 'PlayerSpawned')
+
+      assert.equal(playerSpawnedPayload.account, user1.address)
     })
   })
 })

@@ -7,19 +7,28 @@ import "./SafeMath.sol";
 contract BloccWarz is Ownable {
   using SafeMath for uint256;
 
-  // Contract variables
+  // VARIABLES
+
+  // Financial
   MintAndBurnToken public bwToken;
   uint256 public poolBalance = 0;
-  uint256 public periodLength = 300; // time length of each period in seconds
-  uint256 public currentPeriod = 0; // index of current period
   uint256 public minTokenTransactionWei = 400; // enforce a minimum purchase/sale amount
   uint256 public transactionFeeAs1PctDenom = 4; // used to keep fee calculations as integers using
   uint256 public tokenBWCWeiLockup = 1e21; // 1000 tokens will stay locked in the contract
-  mapping(address => Player) public players;
+  // Game data
+  uint256 public periodLength = 300; // time length of each period in seconds
+  uint256 public currentPeriod = 0; // index of current period
+  uint256 public initFood = 1e18;
+  uint256 public initMedicine = 1e18;
+  uint256 public initOre = 1e18;
+  uint256 public initPopulation = 1e6;
+  uint256 public initArmy = 1e5;
+  mapping(address => Player) public players;// store players data by address
   mapping(address => mapping(address => Battle)) public battles; // attacker -> defender -> battle
-  mapping(uint256 => Period) public periods;
+  mapping(uint256 => Period) public periods;// store data about each period by period index
 
-  // Data structures
+  // TYPES
+
   enum BattleState {
     STARTED,
     ENDED,
@@ -56,7 +65,8 @@ contract BloccWarz is Ownable {
     // TODO score
   }
 
-  // Events
+  // EVENTS
+
   event PlayerSpawned(
     address account
   );
@@ -83,12 +93,21 @@ contract BloccWarz is Ownable {
     // TODO results
   );
 
+  // CONSTRUCTOR
+
   constructor (
     uint256 _periodLength
   ) public {
+    // set period length and deploy token
     periodLength = _periodLength;
     bwToken = new MintAndBurnToken('BloccWarzCash', 18, 'BLCCWZC');
+    // init period 0
+    uint256 startTime = now;
+    periods[currentPeriod].startTime = startTime;
+    periods[currentPeriod].endTime = SafeMath.add(startTime, periodLength);
   }
+
+  // GAME METHODS
 
   function updatePeriod() public {
     while (now >= periods[currentPeriod].endTime) {
@@ -98,6 +117,29 @@ contract BloccWarz is Ownable {
       periods[currentPeriod].endTime = SafeMath.add(prevPeriod.endTime, periodLength);
     }
   }
+
+  function joinGame() public {
+    updatePeriod();
+    require(currentPeriod > 0, "Can not join in 0th period");
+    // check against player rejoining
+    require(players[msg.sender].periodSpawned == 0, "Player already exists");
+    // initialize player
+    players[msg.sender] = Player(
+      currentPeriod,
+      currentPeriod, 1,
+      initFood,
+      initMedicine,
+      initOre,
+      initPopulation,
+      initArmy,
+      0,
+      0
+    );
+    // log event
+    emit PlayerSpawned(msg.sender);
+  }
+
+  // FINANCIAL METHODS
 
   function buyTokens() public payable {
     // Purchase must be enough wei for contract to collect fee
@@ -162,7 +204,8 @@ contract BloccWarz is Ownable {
     require(bwToken.transfer(owner(), _tokensBWCWei), "Contract has not enough tokens for withdraw");
   }
 
-  // Math
+  // UTIL
+
   function sqrt(uint x) internal pure returns (uint y) {
     uint z = (x + 1) / 2;
     y = x;
@@ -172,6 +215,7 @@ contract BloccWarz is Ownable {
     }
   }
 
-  // Fallback
+  // FALLBACK
+
   function() external payable {}
 }
