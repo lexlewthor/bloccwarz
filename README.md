@@ -73,6 +73,5 @@ $ npm test
 
 
 ## Sources
-
-https://github.com/SpankChain/spankbank
-https://github.com/ConnextProject/contracts
+- https://github.com/SpankChain/spankbank
+- https://github.com/ConnextProject/contracts
