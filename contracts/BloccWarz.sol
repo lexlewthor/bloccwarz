@@ -98,7 +98,7 @@ contract BloccWarz is Ownable {
   }
 
   function buyTokens() public payable {
-    // Purchase must be enough wei for owner to collect fee
+    // Purchase must be enough wei for contract to collect fee
     require(msg.value >= minTokenTransactionWei, "Must send minimum purchase amount to buyTokens()");
     // Calculate fee as a fraction of 1%
     uint256 feeWei = SafeMath.div(SafeMath.div(msg.value, 100), transactionFeeAs1PctDenom);
@@ -114,7 +114,7 @@ contract BloccWarz is Ownable {
     );
     // mint tokens for sender
     bwToken.mint(msg.sender, tokensMinted);
-    // incerement balance
+    // incerement pool balance
     poolBalance = SafeMath.add(poolBalance, purchaseWei);
   }
 

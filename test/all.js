@@ -61,7 +61,7 @@ function getEventParams(tx, event) {
 }
 
 contract('BloccWarz', accounts => {
-  let snapshotId, bloccWarz, bwcToken, user1, user2, user3
+  let snapshotId, bloccWarz, bwcTokenAddress, bwcToken, user1, user2, user3
 
   before('deploy contract', async () => {
     bloccWarz = await BloccWarz.deployed()
@@ -133,7 +133,7 @@ contract('BloccWarz', accounts => {
       const netUser = (new BN(userWeiAfter)).minus(new BN(userWeiBefore))
       const totalTokens = await bwcToken.totalSupply()
 
-      assert.equal(netUser.toString(), '-1819899999996019')
+      assert.equal(netUser.toString(), '-1817579999996019')
       assert.equal(userBWCWeiAfter.toString(), '0')
       assert.equal(contractWeiAfter.toString(), '19')
       assert.equal(totalTokens.toString(), '0')
