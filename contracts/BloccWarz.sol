@@ -126,7 +126,8 @@ contract BloccWarz is Ownable {
     // initialize player
     players[msg.sender] = Player(
       currentPeriod,
-      currentPeriod, 1,
+      currentPeriod,
+      1,
       initFood,
       initMedicine,
       initOre,
