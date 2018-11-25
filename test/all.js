@@ -152,7 +152,7 @@ contract('BloccWarz', accounts => {
       await bloccWarz.sellTokens(0, { from: user1.address })
         .should
         .be
-        .rejectedWith('Sale amount must be greater than 0')
+        .rejectedWith('Token amount for sale must be greater than 0')
     })
 
     it('fails with insufficient sale amount wei', async () => {
@@ -168,7 +168,7 @@ contract('BloccWarz', accounts => {
       await bloccWarz.sellTokens(userBWCWeiBefore, { from: user1.address })
         .should
         .be
-        .rejectedWith('Token sale amount wei must meet minimum amount')
+        .rejectedWith('Token sale value must meet minimum transaction amount')
     })
 
     it('fails token transfer', async () => {

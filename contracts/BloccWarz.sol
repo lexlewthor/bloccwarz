@@ -121,7 +121,7 @@ contract BloccWarz is Ownable {
   }
 
   function sellTokens(uint256 _tokensBWCWei) public {
-    require(_tokensBWCWei > 0, "Sale amount must be greater than 0");
+    require(_tokensBWCWei > 0, "Token amount for sale must be greater than 0");
     // Calculate wei value of tokens for sale
     // f(x) = 0.001x
     // F(x) = (x^2)/2000 + C
@@ -134,7 +134,7 @@ contract BloccWarz is Ownable {
         2000
       )
     );
-    require(salePriceWei >= minTokenTransactionWei, "Token sale amount wei must meet minimum amount");
+    require(salePriceWei >= minTokenTransactionWei, "Token sale value must meet minimum transaction amount");
     // This should be impossible to trigger
     // require(poolBalance >= salePriceWei, "Contract balance insufficient for sale");
     // Calculate fee as a fraction of 1% of sale price
