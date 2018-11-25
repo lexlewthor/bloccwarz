@@ -91,25 +91,19 @@ contract('BloccWarz', accounts => {
   })
 
   describe('buyTokens', () => {
-    it('has correct values for minimum purchase', async () => {
-      const value = await bloccWarz.minimumTokenPurchaseWei()
-      //const ownerWeiBefore = await web3.eth.getBalance(owner.address)
+    it('expects correct values for minimum purchase', async () => {
+      const value = await bloccWarz.minTokenTransactionWei()
       await bloccWarz.buyTokens({ from: user1.address, value })
       const contractWei = await web3.eth.getBalance(bloccWarz.address)
-      //const ownerWeiAfter = await web3.eth.getBalance(owner.address)
       const userBWCWei = await bwcToken.balanceOf(user1.address)
-      //const netOwner = (new BN(ownerWeiAfter)).minus(new BN(ownerWeiBefore))
       const totalTokens = await bwcToken.totalSupply()
-      const userBalancBWCWei = userBWCWei.toString()
 
-      //assert.equal(netOwner.toString(), '10')
-      assert.equal(contractWei.toString(), '4000')
-      assert.equal(userBalancBWCWei, '2824')
-      assert.equal(userBalancBWCWei, totalTokens.toString())
+      assert.equal(contractWei.toString(), value.toString())
+      assert.equal(userBWCWei.toString(), totalTokens.toString())
     })
 
-    it('fails with insufficient wei', async () => {
-      const minWei = await bloccWarz.minimumTokenPurchaseWei()
+    it('fails with insufficient purchase amount wei', async () => {
+      const minWei = await bloccWarz.minTokenTransactionWei()
       const value = (new BN(minWei)).minus(1)
       await bloccWarz.buyTokens({ from: user1.address, value })
         .should
@@ -119,21 +113,17 @@ contract('BloccWarz', accounts => {
   })
 
   describe('sellTokens', () => {
-    it.only('has correct values', async () => {
-      // buy
-      const value = await bloccWarz.minimumTokenPurchaseWei()
+    it('expects correct values for minimum sale', async () => {
+      // user1 buys enough tokens where sale will meet minimum price
+      const minPurchaseWei = await bloccWarz.minTokenTransactionWei()
+      const value = minPurchaseWei * 10
       await bloccWarz.buyTokens({ from: user1.address, value })
 
       // collect values before sell
       const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
-      const contractWieBefore = await web3.eth.getBalance(bloccWarz.address)
       const userWeiBefore = await web3.eth.getBalance(user1.address)
 
-      // console.log('userBWCWeiBefore', userBWCWeiBefore.toString())
-      // console.log('contractWieBefore', contractWieBefore.toString())
-      // console.log('userWeiBefore', userWeiBefore.toString())
-
-      // sell
+      // user1 sells all tokens
       await bwcToken.approve(bloccWarz.address, userBWCWeiBefore, { from: user1.address })
       await bloccWarz.sellTokens(userBWCWeiBefore, { from: user1.address })
 
@@ -143,26 +133,57 @@ contract('BloccWarz', accounts => {
       const netUser = (new BN(userWeiAfter)).minus(new BN(userWeiBefore))
       const totalTokens = await bwcToken.totalSupply()
 
-      // console.log('userBWCWeiAfter', userBWCWeiAfter.toString())
-      // console.log('contractWeiAfter', contractWeiAfter.toString())
-      // console.log('userWeiAfter', userWeiAfter.toString())
-      // console.log('netUser', netUser.toString())
-      // console.log('totalTokens', totalTokens.toString())
-
-      assert.equal(netUser.toString(), '-1817579999996019')
+      assert.equal(netUser.toString(), '-1819899999996019')
       assert.equal(userBWCWeiAfter.toString(), '0')
       assert.equal(contractWeiAfter.toString(), '19')
       assert.equal(totalTokens.toString(), '0')
-
     })
 
-    // it('fails with insufficient tokens', async () => {
-    //   const minWei = await bloccWarz.minimumTokenPurchaseWei()
-    //   const value = (new BN(minWei)).minus(1)
-    //   await bloccWarz.buyTokens({ from: user1.address, value })
-    //     .should
-    //     .be
-    //     .rejectedWith('Must send minimum purchase amount to buyTokens()')
-    // })
+    it('fails with 0 tokens provided', async () => {
+      // user1 buys enough tokens where sale will meet minimum price
+      const value = await bloccWarz.minTokenTransactionWei() * 10
+      await bloccWarz.buyTokens({ from: user1.address, value })
+
+      // collect values before sell
+      const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
+
+      // user1 sells 0
+      await bwcToken.approve(bloccWarz.address, userBWCWeiBefore, { from: user1.address })
+      await bloccWarz.sellTokens(0, { from: user1.address })
+        .should
+        .be
+        .rejectedWith('Sale amount must be greater than 0')
+    })
+
+    it('fails with insufficient sale amount wei', async () => {
+      // user1 buys enough tokens where sale will NOT meet minimum price
+      const value = await bloccWarz.minTokenTransactionWei()
+      await bloccWarz.buyTokens({ from: user1.address, value })
+
+      // collect values before sell
+      const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
+
+      // user1 sells all
+      await bwcToken.approve(bloccWarz.address, userBWCWeiBefore, { from: user1.address })
+      await bloccWarz.sellTokens(userBWCWeiBefore, { from: user1.address })
+        .should
+        .be
+        .rejectedWith('Token sale amount wei must meet minimum amount')
+    })
+
+    it('fails token transfer', async () => {
+      // user1 buys enough tokens where sale will meet minimum price
+      const value = await bloccWarz.minTokenTransactionWei() * 10
+      await bloccWarz.buyTokens({ from: user1.address, value })
+
+      // collect values before sell
+      const userBWCWeiBefore = await bwcToken.balanceOf(user1.address)
+
+      // user1 sells all but does not approve
+      await bloccWarz.sellTokens(userBWCWeiBefore, { from: user1.address })
+        .should
+        .be
+        .rejectedWith('Returned error: VM Exception while processing transaction: revert')
+    })
   })
 })

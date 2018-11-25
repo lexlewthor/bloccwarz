@@ -16,11 +16,11 @@ $ npm test
 
 ### Token Purchases/Sales
 - Using linear bonding curve to mint/burn BW tokens `f(x) = 0.001x`
-  - Some research https://blog.relevant.community/how-to-make-bonding-curves-for-continuous-token-models-3784653f8b17
+  - Some research here https://blog.relevant.community/how-to-make-bonding-curves-for-continuous-token-models-3784653f8b17
   - Used https://www.integral-calculator.com/ to play with some different curves
-  - Using google to search for different implementations in Solidity, probably Bancor is best example
-- Owner of contract charges fixed % of wei value on mint/burn transactions
-- Minimum token transaction amount (lot) enforced in contract
+- Contract charges fixed 0.25% of wei value on mint/burn transactions to create spread
+- Minimum token transaction amount in wei (lot size) enforced in contract on buy/sell sides
+  - Ensures at least 1 wei in fees
 
 ### Game Resources
 - Players will be created and allocated initial game resources on token deposit (full list of resources and balancing functions TBD)

@@ -12,7 +12,7 @@ contract BloccWarz is Ownable {
   uint256 public poolBalance = 0;
   uint256 public periodLength = 300; // time length of each period in seconds
   uint256 public currentPeriod = 0; // index of current period
-  uint256 public minimumTokenPurchaseWei = 4000; // enforce a minimum purchase amount
+  uint256 public minTokenTransactionWei = 400; // enforce a minimum purchase/sale amount
   uint256 public transactionFeeAs1PctDenom = 4; // used to keep fee calculations as integers using
   mapping(address => Player) public players;
   mapping(address => mapping(address => Battle)) public battles; // attacker -> defender -> battle
@@ -99,7 +99,7 @@ contract BloccWarz is Ownable {
 
   function buyTokens() public payable {
     // Purchase must be enough wei for owner to collect fee
-    require(msg.value >= minimumTokenPurchaseWei, "Must send minimum purchase amount to buyTokens()");
+    require(msg.value >= minTokenTransactionWei, "Must send minimum purchase amount to buyTokens()");
     // Calculate fee as a fraction of 1%
     uint256 feeWei = SafeMath.div(SafeMath.div(msg.value, 100), transactionFeeAs1PctDenom);
     uint256 purchaseWei = SafeMath.sub(msg.value, feeWei);
@@ -132,7 +132,9 @@ contract BloccWarz is Ownable {
         2000
       )
     );
-    require(poolBalance >= salePriceWei, "Contract balance insufficient for sale");
+    require(salePriceWei >= minTokenTransactionWei, "Token sale amount wei must meet minimum amount");
+    // This should be impossible to trigger
+    // require(poolBalance >= salePriceWei, "Contract balance insufficient for sale");
     // Calculate fee as a fraction of 1% of sale price
     uint256 feeWei = SafeMath.div(SafeMath.div(salePriceWei, 100), transactionFeeAs1PctDenom);
     uint256 sellerBalanceWei = SafeMath.sub(salePriceWei, feeWei);
