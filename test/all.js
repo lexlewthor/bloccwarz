@@ -133,7 +133,7 @@ contract('BloccWarz', accounts => {
       const netUser = (new BN(userWeiAfter)).minus(new BN(userWeiBefore))
       const totalTokens = await bwcToken.totalSupply()
 
-      assert.equal(netUser.toString(), '-1817579999996019')
+      assert.isTrue(netUser < 0)
       assert.equal(userBWCWeiAfter.toString(), '0')
       assert.equal(contractWeiAfter.toString(), '19')
       assert.equal(totalTokens.toString(), '0')

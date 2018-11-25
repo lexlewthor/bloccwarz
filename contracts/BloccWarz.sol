@@ -14,6 +14,7 @@ contract BloccWarz is Ownable {
   uint256 public currentPeriod = 0; // index of current period
   uint256 public minTokenTransactionWei = 400; // enforce a minimum purchase/sale amount
   uint256 public transactionFeeAs1PctDenom = 4; // used to keep fee calculations as integers using
+  uint256 public tokenBWCWeiLockup = 1e21; // 1000 tokens will stay locked in the contract
   mapping(address => Player) public players;
   mapping(address => mapping(address => Battle)) public battles; // attacker -> defender -> battle
   mapping(uint256 => Period) public periods;
@@ -43,6 +44,7 @@ contract BloccWarz is Ownable {
     uint256 medicine;
     uint256 ore;
     uint256 population;
+    uint256 army;
     // Battles
     uint256 battlesTotal;
     uint256 battlesWon;
@@ -146,6 +148,18 @@ contract BloccWarz is Ownable {
     msg.sender.transfer(sellerBalanceWei);
     // update pool balance
     poolBalance = SafeMath.sub(poolBalance, sellerBalanceWei);
+  }
+
+  function withdrawWei(uint256 _amountWei) onlyOwner public  {
+    // Owner can never take from the pool, only contract profits
+    require(_amountWei <= SafeMath.sub(address(this).balance, poolBalance));
+    owner().transfer(_amountWei);
+  }
+
+  function withdrawTokens(uint256 _tokensBWCWei) onlyOwner public  {
+    // Owner can withdraw tokens collected by the contract above the lockup amount
+    require(bwToken.balanceOf(this) > tokenBWCWeiLockup, "Not enough tokens locked up");
+    require(bwToken.transfer(owner(), _tokensBWCWei), "Contract has not enough tokens for withdraw");
   }
 
   // Math
