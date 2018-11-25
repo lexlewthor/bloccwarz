@@ -126,8 +126,8 @@ contract BloccWarz is Ownable {
     // initialize player
     players[msg.sender] = Player(
       currentPeriod,
-      currentPeriod,
-      1,
+      0,
+      0,
       initFood,
       initMedicine,
       initOre,
@@ -136,6 +136,8 @@ contract BloccWarz is Ownable {
       0,
       0
     );
+    // update period
+    periods[currentPeriod].playersSpawned += 1;
     // log event
     emit PlayerSpawned(msg.sender);
   }

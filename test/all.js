@@ -198,8 +198,8 @@ contract('BloccWarz', accounts => {
       const player = await bloccWarz.players(user1.address)
 
       assert.equal(player.periodSpawned.toNumber(), 1)
-      assert.equal(player.periodLastPlayed.toNumber(), 1)
-      assert.equal(player.periodsPlayedTotal.toNumber(), 1)
+      assert.equal(player.periodLastPlayed.toNumber(), 0)
+      assert.equal(player.periodsPlayedTotal.toNumber(), 0)
       assert.isTrue(player.food.eq(await bloccWarz.initFood()))
       assert.isTrue(player.medicine.eq(await bloccWarz.initMedicine()))
       assert.isTrue(player.ore.eq(await bloccWarz.initOre()))
