@@ -16,40 +16,60 @@ $ npm test
 
 ### Token Purchases/Sales
 - Using linear bonding curve to mint/burn BW tokens `f(x) = 0.001x`
-  - Some research here https://blog.relevant.community/how-to-make-bonding-curves-for-continuous-token-models-3784653f8b17
-  - Used https://www.integral-calculator.com/ to play with some different curves
+- Used https://www.integral-calculator.com/ to play with some different curves
 - Contract charges fixed 0.25% of wei value on mint/burn transactions to create spread
 - Minimum token transaction amount in wei (lot size) enforced in contract on buy/sell sides
   - Ensures at least 1 wei in fees
+- Token lockup amount defined in contract
+  - fixed or dynamic lokup amount?
+  - TBD how the contract collects tokens and should they be frozen at all, or burned?
+
+### BloccWarzCash Tokens
+- Tokens will be offered as a wager during battles, held in escrow and distributed at end of battle
+- TBD An amount of tokens spent will be stored in the contract with one of the following solutions
+  - leave tokens frozen in contract
+  - allow withdraw above a minimum amount
+  - burn collected tokens
+  - burn above a frozen amount
 
 ### Game Resources
-- Players will be created and allocated initial game resources on token deposit (full list of resources and balancing functions TBD)
+- Players will be created and allocated initial game resources on joinGame
   - food
   - medicine
   - ore
   - population
   - army
+- Players can harvest an amount of each resource per period
+  - Fixed amount?
+  - Percentage of initial amount?
+  - Dynamic amount based on oracle or similar?
+- TBD allow trading of resources within contract?
+  - using fixed formulas?
+  - dynamic formulas based on initial gas cost?
+  - open marketplace for game resources other than tokens?
 
-### Game Actions Using BloccWarzCash Tokens
-- Tokens will be spent on certain game actions, not all
-- Tokens will be offered as a wager during battles, held in escrow and distributed at end of battle
-- Tokens spent will be stored in the contract, with an ownerOnly function to withdraw
-  - TBD, could leave tokens frozen in contract, or only allow withdraw above a minimum amount frozen
+### Game Actions
 - Players can call a single game action once each period, each with associated resource cost/reward (full list of actions and cost/rewards TBD)
   - Harvest
     - collect more resources based on number of periods played and elapsed periods since last played
-  - Repair
-    - spend a moderate amount of resources to increase other resources
-  - Build
-    - spend a larger amount of resources to increase other resources
-  - Trade
-    - take a buy/sell order for resources in the contract marketplace
-    - TBD allow this multiple times per period?
-  - Order
-    - place/cancel a buy/sell order for resources in the contract marketplace
-    - TBD allow this multiple times per period?
+    - fixed formula + bonus
+    - random formula + bonus
+  - GrowPopulation
+    - spend an amount of resources to increase other resources
+    - `food + medicine = population`, with modifiers and bonuses
+  - RecruitArmy
+    - spend an amount of resources to increase other resources
+    - `food + ore + population = army`, with modifiers and bonuses
   - Attack (initiates battle, see below)
   - Defend (offers a defensive bonus in battles, see below)
+- Marketplace actions (see below)
+  - These need more thought about how to provide a fair market using tokens
+    - Trade
+      - take a buy/sell order for resources in the contract marketplace
+      - TBD allow this multiple times per period?
+    - Order
+      - place/cancel a buy/sell order for resources in the contract marketplace
+      - TBD allow this multiple times per period?
 
 ### Battles
 - Attack initiates a battle and can only be called once per period, disallowing further actions during the period.
@@ -75,3 +95,6 @@ $ npm test
 ## Sources
 - https://github.com/SpankChain/spankbank
 - https://github.com/ConnextProject/contracts
+- https://ethereum.stackexchange.com/questions/2910/can-i-square-root-in-solidity
+- https://blog.relevant.community/how-to-make-bonding-curves-for-continuous-token-models-3784653f8b17
+- https://www.integral-calculator.com/
