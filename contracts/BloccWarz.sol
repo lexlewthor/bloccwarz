@@ -13,16 +13,20 @@ contract BloccWarz is Ownable {
   MintAndBurnToken public bwToken;
   uint256 public poolBalance = 0;
   uint256 public minTokenTransactionWei = 400; // enforce a minimum purchase/sale amount
-  uint256 public transactionFeeAs1PctDenom = 4; // used to keep fee calculations as integers using
+  uint256 public transactionFeeAs1PctDenom = 4; // used to keep fee calculations as integers
   uint256 public tokenBWCWeiLockup = 1e21; // 1000 tokens will stay locked in the contract
   // Game data
   uint256 public periodLength = 300; // time length of each period in seconds
   uint256 public currentPeriod = 0; // index of current period
-  uint256 public initFood = 1e18;
-  uint256 public initMedicine = 1e18;
-  uint256 public initOre = 1e18;
+  // Initial resources
+  uint256 public initFood = 1e9;
+  uint256 public initMedicine = 1e6;
+  uint256 public initOre = 1e4;
   uint256 public initPopulation = 1e6;
-  uint256 public initArmy = 1e5;
+  uint256 public initArmy = 1e3;
+
+  // MAPPINGS
+
   mapping(address => Player) public players;// store players data by address
   mapping(address => mapping(address => Battle)) public battles; // attacker -> defender -> battle
   mapping(uint256 => Period) public periods;// store data about each period by period index
@@ -126,8 +130,8 @@ contract BloccWarz is Ownable {
     // initialize player
     players[msg.sender] = Player(
       currentPeriod,
-      currentPeriod,
-      1,
+      0,
+      0,
       initFood,
       initMedicine,
       initOre,
@@ -136,6 +140,8 @@ contract BloccWarz is Ownable {
       0,
       0
     );
+    // update period
+    periods[currentPeriod].playersSpawned += 1;
     // log event
     emit PlayerSpawned(msg.sender);
   }
