@@ -4,16 +4,16 @@
   "version": "0.0.1",
   "main": "build",
   "devDependencies": {
-    "bn.js": "4.11.8",
+    "bn.js": "5.0.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
-    "ethereumjs-abi": "0.6.5",
+    "ethereumjs-abi": "0.6.7",
     "ethjs-provider-http": "0.1.6",
     "ethjs-rpc": "0.2.0",
-    "ganache-cli": "6.1.8",
-    "truffle": "5.0.0-beta.1",
-    "truffle-hdwallet-provider": "0.0.6",
-    "typechain": "0.3.9"
+    "ganache-cli": "6.5.0",
+    "truffle": "5.0.28",
+    "truffle-hdwallet-provider": "1.0.14",
+    "typechain": "0.3.19"
   },
   "scripts": {
     "build": "npm run compile && npm run generate",
