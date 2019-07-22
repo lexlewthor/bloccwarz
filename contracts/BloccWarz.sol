@@ -1,4 +1,4 @@
-pragma solidity 0.4.25;
+pragma solidity 0.5.8;
 
 import { MintAndBurnToken } from "./MintAndBurnToken.sol";
 import "./Ownable.sol";
@@ -8,7 +8,8 @@ contract BloccWarz is Ownable {
   using SafeMath for uint256;
 
   // VARIABLES
-
+  // Owner
+  address payable public ownerAddr = ownerAddr;
   // Financial
   MintAndBurnToken public bwToken;
   uint256 public poolBalance = 0;
@@ -190,7 +191,7 @@ contract BloccWarz is Ownable {
     uint256 feeWei = SafeMath.div(SafeMath.div(salePriceWei, 100), transactionFeeAs1PctDenom);
     uint256 sellerBalanceWei = SafeMath.sub(salePriceWei, feeWei);
     // transfer the tokens
-    require(bwToken.transferFrom(msg.sender, this, _tokensBWCWei));
+    require(bwToken.transferFrom(msg.sender, address(this), _tokensBWCWei), "ERC-20 transferFrom failed");
     // Burn tokens
     bwToken.burn(_tokensBWCWei);
     // Pay seller
@@ -199,16 +200,16 @@ contract BloccWarz is Ownable {
     poolBalance = SafeMath.sub(poolBalance, sellerBalanceWei);
   }
 
-  function withdrawWei(uint256 _amountWei) onlyOwner public  {
+  function withdrawWei(uint256 _amountWei) public onlyOwner {
     // Owner can never take from the pool, only contract profits
-    require(_amountWei <= SafeMath.sub(address(this).balance, poolBalance));
-    owner().transfer(_amountWei);
+    require(_amountWei <= SafeMath.sub(address(this).balance, poolBalance), "Withdraw exceeds limit");
+    ownerAddr.transfer(_amountWei);
   }
 
-  function withdrawTokens(uint256 _tokensBWCWei) onlyOwner public  {
+  function withdrawTokens(uint256 _tokensBWCWei) public onlyOwner {
     // Owner can withdraw tokens collected by the contract above the lockup amount
-    require(bwToken.balanceOf(this) > tokenBWCWeiLockup, "Not enough tokens locked up");
-    require(bwToken.transfer(owner(), _tokensBWCWei), "Contract has not enough tokens for withdraw");
+    require(bwToken.balanceOf(address(this)) > tokenBWCWeiLockup, "Not enough tokens locked up");
+    require(bwToken.transfer(ownerAddr, _tokensBWCWei), "Contract has not enough tokens for withdraw");
   }
 
   // UTIL
