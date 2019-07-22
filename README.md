@@ -110,6 +110,7 @@ Ability to form alliances with a balanced battle system that awards/penalizes in
   - Ensures at least x wei in fees
 - Fees collected are locked in contract and withdrawable by owner
 - There could be a lock up threshold on the liquidity pool which ensures profit for early adopters
+- Much of the existing data structures will be removed as game logic becomes centralized and crypto transactions are facilitated by layer 2
 
 ## References
 - Game design inspired by <http://teq3.playteq.com>
