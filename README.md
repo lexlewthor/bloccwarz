@@ -32,6 +32,9 @@ $ npm test
 
 ## Game design (WIP)
 
+Set in a future world where communities as small as city blocks have been able to decentralize and form
+micro-governments facilitated by the collapse of central banks due to mass adoption of cryptocurrency technology.  The working title "BloccWarz" is a play on blockchain, city blocks, but also the communist states of the Cold War era, called "Blocs."
+
 Free to play, turn-based strategy, resource management, harvesting, and p2p marketplace.
 Ability to form alliances with a balanced battle system that awards/penalizes in-game resources based on random weighted outcome. Alliance mechanism should also be balanced to incentivize decentralization.  Pay to play features limited to minor buffs, NFTs, with grinding and longevity being incentivized. Monetization should occur through crypto on-boarding fees, transactions with layer 1 game contract (TBD), and microtransaction fees from layer 2 transactions.
 
